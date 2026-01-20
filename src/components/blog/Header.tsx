@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { motion, AnimatePresence } from "framer-motion";
 import { ThemeToggle } from "@/components/ThemeToggle";
+
 const navLinks = [{
   name: "Home",
   path: "/"
@@ -18,11 +19,13 @@ const navLinks = [{
   name: "Contact",
   path: "/contact"
 }];
+
 export function Header() {
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
@@ -32,6 +35,7 @@ export function Header() {
       setIsMenuOpen(false);
     }
   };
+
   return <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between md:h-20">
         {/* Logo */}
@@ -70,8 +74,10 @@ export function Header() {
             <Search className="h-5 w-5" />
           </Button>
           <ThemeToggle />
-          <Button variant="hero" size="sm">
-            Subscribe
+          
+          {/* FIXED DESKTOP BUTTON */}
+          <Button variant="hero" size="sm" asChild>
+            <Link to="/contact">Subscribe</Link>
           </Button>
         </div>
 
@@ -107,8 +113,10 @@ export function Header() {
                     {link.name}
                   </Link>)}
               </nav>
-              <Button variant="hero" className="mt-4 w-full">
-                Subscribe
+              
+              {/* FIXED MOBILE BUTTON */}
+              <Button variant="hero" className="mt-4 w-full" asChild onClick={() => setIsMenuOpen(false)}>
+                <Link to="/contact">Subscribe</Link>
               </Button>
             </div>
           </motion.div>}
