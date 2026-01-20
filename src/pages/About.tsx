@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom"; // Added this for navigation
 import { Header } from "@/components/blog/Header";
 import { Footer } from "@/components/blog/Footer";
 import { NewsletterSignup } from "@/components/blog/NewsletterSignup";
@@ -7,6 +8,7 @@ import { Coffee, BookOpen, Camera, Heart } from "lucide-react";
 import authorImage from "@/assets/author.png";
 import authorImage3 from "@/assets/author-3.jpg";
 import post4 from "@/assets/post-4.jpg";
+
 const About = () => {
   return <div className="min-h-screen bg-background">
       <Header />
@@ -125,9 +127,12 @@ const About = () => {
               consider supporting my work. Every coffee helps me keep creating content 
               that matters.
             </p>
-            <Button variant="support" size="lg">
-              <Coffee className="h-5 w-5" />
-              Buy Me a Coffee
+            {/* FIXED BUTTON: Uses asChild and Link to go to your /support page */}
+            <Button variant="support" size="lg" asChild>
+              <Link to="/support">
+                <Coffee className="h-5 w-5 mr-2" />
+                Buy Me a Coffee
+              </Link>
             </Button>
           </motion.div>
 
