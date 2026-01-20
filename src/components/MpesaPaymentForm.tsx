@@ -18,10 +18,7 @@ export function MpesaPaymentForm({ amount, tierName, onClose }: MpesaPaymentForm
   const [message, setMessage] = useState("");
 
   const formatPhoneNumber = (phone: string): string => {
-    // Remove all non-digit characters
     let cleaned = phone.replace(/\D/g, "");
-    
-    // Handle different formats
     if (cleaned.startsWith("0")) {
       cleaned = "254" + cleaned.slice(1);
     } else if (cleaned.startsWith("+")) {
@@ -29,13 +26,11 @@ export function MpesaPaymentForm({ amount, tierName, onClose }: MpesaPaymentForm
     } else if (!cleaned.startsWith("254")) {
       cleaned = "254" + cleaned;
     }
-    
     return cleaned;
   };
 
   const validatePhoneNumber = (phone: string): boolean => {
     const formatted = formatPhoneNumber(phone);
-    // Kenyan phone numbers: 254XXXXXXXXX (12 digits)
     return /^254[17]\d{8}$/.test(formatted);
   };
 
@@ -53,32 +48,42 @@ export function MpesaPaymentForm({ amount, tierName, onClose }: MpesaPaymentForm
     setMessage("Sending STK Push to your phone...");
 
     try {
-      // This will call your Vercel API endpoint
-      const response = await fetch("/api/mpesa/stk-push", {
+      // FIX 1: Path matched to C:\mwenda-main\api\mpesa\stkpush.ts (Removed the dash)
+      const response = await fetch("/api/mpesa/stkpush", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          phoneNumber: formatPhoneNumber(phoneNumber),
+          // FIX 2: Corrected 'phone' to 'phoneNumber' to match the state variable
+          phoneNumber: phoneNumber, 
           amount: amount,
-          accountReference: `TheMwendaChronicles-${tierName}`,
+          accountReference: `Mwenda-${tierName.replace(/\s+/g, '')}`,
           transactionDesc: `Support: ${tierName} tier`,
         }),
       });
 
-      const data = await response.json();
+      // FIX 3: Check content type before parsing to handle 405/404 HTML errors
+      const contentType = response.headers.get("content-type");
+      let data;
+      if (contentType && contentType.includes("application/json")) {
+        data = await response.json();
+      } else {
+        throw new Error("Server error: API route not found or not accepting POST.");
+      }
 
-      if (response.ok && data.success) {
+      // Daraja API success code is "0"
+      if (response.ok && (data.ResponseCode === "0" || data.success)) {
         setStatus("success");
         setMessage("STK Push sent! Please enter your M-Pesa PIN on your phone to complete the payment.");
       } else {
         setStatus("error");
-        setMessage(data.error || "Failed to initiate payment. Please try again.");
+        setMessage(data.CustomerMessage || data.error || "Failed to initiate payment. Please try again.");
       }
-    } catch (error) {
+    } catch (error: any) {
+      console.error("Payment Error:", error);
       setStatus("error");
-      setMessage("Network error. Please check your connection and try again.");
+      setMessage(error.message || "Network error. Please check your connection and try again.");
     } finally {
       setLoading(false);
     }
