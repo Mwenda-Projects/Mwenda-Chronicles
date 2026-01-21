@@ -1,11 +1,4 @@
 // src/data/posts.ts
-// src/data/posts.ts
-import path from "node:path";
-import { fileURLToPath } from "node:url";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
 
 export interface Post {
   id: number;
@@ -22,8 +15,6 @@ export interface Post {
     avatar: string;
   };
 }
-
-const assetsPath = path.join(__dirname, "../assets");
 
 export const posts: Post[] = [
   {
@@ -72,9 +63,9 @@ Peace is not the absence of chaos—it's the ability to find calm within it.
     category: "Lifestyle",
     date: "Dec 10, 2024",
     readTime: "5 min read",
-    image: path.join(assetsPath, "hero-blog.jpg"),
+    image: "../assets/hero-blog.jpg",
     slug: "finding-peace",
-    author: { name: "Antony Mwenda", avatar: path.join(assetsPath, "post-1.jpg") }
+    author: { name: "Antony Mwenda", avatar: "../assets/post-1.jpg" }
   },
   {
     id: 2,
@@ -134,9 +125,9 @@ Start tomorrow. Wake up fifteen minutes earlier. Use that time for something tha
     category: "Productivity",
     date: "Dec 8, 2024",
     readTime: "7 min read",
-    image: path.join(assetsPath, "post-1.jpg"),
+    image: "../assets/post-1.jpg",
     slug: "productive-mornings",
-    author: { name: "Antony Mwenda", avatar: path.join(assetsPath, "post-1.jpg") }
+    author: { name: "Antony Mwenda", avatar: "../assets/post-1.jpg" }
   },
   {
     id: 3,
@@ -190,9 +181,9 @@ The coast will always be there, waiting. But its wisdom is portable—carried in
     category: "Travel",
     date: "Dec 5, 2024",
     readTime: "4 min read",
-    image: path.join(assetsPath, "post-2.jpg"),
+    image: "../assets/post-2.jpg",
     slug: "coastal-wanderings",
-    author: { name: "Antony Mwenda", avatar: path.join(assetsPath, "post-1.jpg") }
+    author: { name: "Antony Mwenda", avatar: "../assets/post-1.jpg" }
   },
   {
     id: 4,
@@ -263,14 +254,13 @@ Here's the beautiful paradox: when you slow down, you often accomplish more of w
 Slow living isn't a destination—it's a continuous practice of choosing intention over autopilot, presence over distraction, meaning over busyness.
 
 Start today. Pick one area of your life and slow it down. Notice what opens up when you stop rushing through.
-
 `,
     category: "Lifestyle",
     date: "Dec 10, 2024",
     readTime: "6 min read",
-    image: path.join(assetsPath, "post-1.jpg"),
+    image: "../assets/post-1.jpg",
     slug: "slow-living",
-    author: { name: "Antony Mwenda", avatar: path.join(assetsPath, "post-1.jpg") }
+    author: { name: "Antony Mwenda", avatar: "../assets/post-1.jpg" }
   },
   {
     id: 5,
@@ -333,9 +323,9 @@ The dawn has been waiting for you.
     category: "Travel",
     date: "Dec 8, 2024",
     readTime: "4 min read",
-    image: path.join(assetsPath, "post-2.jpg"),
+    image: "../assets/post-2.jpg",
     slug: "sunrise-walks",
-    author: { name: "Antony Mwenda", avatar: path.join(assetsPath, "post-1.jpg") }
+    author: { name: "Antony Mwenda", avatar: "../assets/post-1.jpg" }
   },
   {
     id: 6,
@@ -411,9 +401,9 @@ This Sunday, try it. Linger a little longer. Savor a little more. See what opens
     category: "Food & Lifestyle",
     date: "Dec 6, 2024",
     readTime: "5 min read",
-    image: path.join(assetsPath, "post-3.jpg"),
+    image: "../assets/post-3.jpg",
     slug: "sunday-brunch",
-    author: { name: "Antony Mwenda", avatar: path.join(assetsPath, "post-1.jpg") }
+    author: { name: "Antony Mwenda", avatar: "../assets/post-1.jpg" }
   },
   {
     id: 7,
@@ -493,9 +483,9 @@ Your home can be a sanctuary. Not through perfection, but through intention. Sta
     category: "Home & Decor",
     date: "Dec 4, 2024",
     readTime: "7 min read",
-    image: path.join(assetsPath, "post-4.jpg"),
+    image: "../assets/post-4.jpg",
     slug: "calm-home",
-    author: { name: "Antony Mwenda", avatar: path.join(assetsPath, "post-1.jpg") }
+    author: { name: "Antony Mwenda", avatar: "../assets/post-1.jpg" }
   },
   {
     id: 8,
@@ -587,9 +577,9 @@ This Sunday, try something from this list. Notice how it feels to prioritize you
     category: "Wellness",
     date: "Dec 2, 2024",
     readTime: "5 min read",
-    image: path.join(assetsPath, "post-5.jpg"),
+    image: "../assets/post-5.jpg",
     slug: "self-care-sunday",
-    author: { name: "Antony Mwenda", avatar: path.join(assetsPath, "post-1.jpg") }
+    author: { name: "Antony Mwenda", avatar: "../assets/post-1.jpg" }
   }
 ];
 
