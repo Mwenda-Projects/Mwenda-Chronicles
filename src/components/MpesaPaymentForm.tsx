@@ -17,20 +17,24 @@ export function MpesaPaymentForm({ amount, tierName, onClose }: MpesaPaymentForm
   const [status, setStatus] = useState<"idle" | "pending" | "success" | "error">("idle");
   const [message, setMessage] = useState("");
 
-  const formatPhoneNumber = (phone: string): string => {
-    let cleaned = phone.replace(/\D/g, "");
+  // Helper to ensure the API always receives 2547XXXXXXXX
+  const formatPhoneNumberForAPI = (phone: string): string => {
+    let cleaned = phone.replace(/\D/g, ""); // Remove non-digits
     if (cleaned.startsWith("0")) {
-      cleaned = "254" + cleaned.slice(1);
-    } else if (cleaned.startsWith("+")) {
-      cleaned = cleaned.slice(1);
-    } else if (!cleaned.startsWith("254")) {
-      cleaned = "254" + cleaned;
+      return "254" + cleaned.slice(1);
+    }
+    if (cleaned.startsWith("7") || cleaned.startsWith("1")) {
+      return "254" + cleaned;
+    }
+    if (cleaned.startsWith("254")) {
+      return cleaned;
     }
     return cleaned;
   };
 
   const validatePhoneNumber = (phone: string): boolean => {
-    const formatted = formatPhoneNumber(phone);
+    const formatted = formatPhoneNumberForAPI(phone);
+    // Validates that it is exactly 12 digits starting with 2547 or 2541
     return /^254[17]\d{8}$/.test(formatted);
   };
 
@@ -39,7 +43,7 @@ export function MpesaPaymentForm({ amount, tierName, onClose }: MpesaPaymentForm
     
     if (!validatePhoneNumber(phoneNumber)) {
       setStatus("error");
-      setMessage("Please enter a valid Kenyan phone number (e.g., 0712345678)");
+      setMessage("Please enter a valid phone number (e.g., 0712345678)");
       return;
     }
 
@@ -48,42 +52,41 @@ export function MpesaPaymentForm({ amount, tierName, onClose }: MpesaPaymentForm
     setMessage("Sending STK Push to your phone...");
 
     try {
-      // FIX 1: Path matched to C:\mwenda-main\api\mpesa\stkpush.ts (Removed the dash)
+      // Create the 254 version just for the API call
+      const apiPhoneNumber = formatPhoneNumberForAPI(phoneNumber);
+
       const response = await fetch("/api/mpesa/stkpush", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          // FIX 2: Corrected 'phone' to 'phoneNumber' to match the state variable
-          phoneNumber: phoneNumber, 
+          phoneNumber: apiPhoneNumber, 
           amount: amount,
           accountReference: `Mwenda-${tierName.replace(/\s+/g, '')}`,
           transactionDesc: `Support: ${tierName} tier`,
         }),
       });
 
-      // FIX 3: Check content type before parsing to handle 405/404 HTML errors
       const contentType = response.headers.get("content-type");
       let data;
       if (contentType && contentType.includes("application/json")) {
         data = await response.json();
       } else {
-        throw new Error("Server error: API route not found or not accepting POST.");
+        throw new Error("Server error: Check if your API route is correctly deployed on Vercel.");
       }
 
-      // Daraja API success code is "0"
       if (response.ok && (data.ResponseCode === "0" || data.success)) {
         setStatus("success");
         setMessage("STK Push sent! Please enter your M-Pesa PIN on your phone to complete the payment.");
       } else {
         setStatus("error");
-        setMessage(data.CustomerMessage || data.error || "Failed to initiate payment. Please try again.");
+        setMessage(data.CustomerMessage || data.errorMessage || "M-Pesa rejected the request. Try again.");
       }
     } catch (error: any) {
       console.error("Payment Error:", error);
       setStatus("error");
-      setMessage(error.message || "Network error. Please check your connection and try again.");
+      setMessage(error.message || "Network error. Please check your connection.");
     } finally {
       setLoading(false);
     }
@@ -112,11 +115,11 @@ export function MpesaPaymentForm({ amount, tierName, onClose }: MpesaPaymentForm
         </button>
 
         <div className="mb-6 text-center">
-          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-500/10">
+          <div className="mx-auto mb-4 flex h-12 w-auto items-center justify-center rounded-full">
             <img 
               src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/M-PESA_LOGO-01.svg/1200px-M-PESA_LOGO-01.svg.png" 
               alt="M-Pesa" 
-              className="h-10 w-10 object-contain"
+              className="h-12 w-auto object-contain"
             />
           </div>
           <h2 className="font-heading text-xl font-bold text-card-foreground">
@@ -167,8 +170,11 @@ export function MpesaPaymentForm({ amount, tierName, onClose }: MpesaPaymentForm
                     type="tel"
                     placeholder="0712345678"
                     value={phoneNumber}
+                    maxLength={10}
                     onChange={(e) => {
-                      setPhoneNumber(e.target.value);
+                      // Only allow digits to be typed
+                      const val = e.target.value.replace(/\D/g, "");
+                      setPhoneNumber(val);
                       if (status === "error") setStatus("idle");
                     }}
                     className="pl-10"
@@ -177,7 +183,7 @@ export function MpesaPaymentForm({ amount, tierName, onClose }: MpesaPaymentForm
                   />
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  Enter the phone number registered with M-Pesa
+                  Standard format: 0712345678 or 0112345678
                 </p>
               </div>
 
@@ -205,36 +211,27 @@ export function MpesaPaymentForm({ amount, tierName, onClose }: MpesaPaymentForm
 
               <div className="rounded-lg bg-muted/50 p-4">
                 <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Amount</span>
-                  <span className="font-semibold text-card-foreground">KES {amount.toLocaleString()}</span>
-                </div>
-                <div className="mt-2 flex justify-between text-sm">
-                  <span className="text-muted-foreground">Support Tier</span>
-                  <span className="font-medium text-card-foreground">{tierName}</span>
+                  <span className="text-muted-foreground">Total to Pay</span>
+                  <span className="font-bold text-card-foreground text-lg">KES {amount.toLocaleString()}</span>
                 </div>
               </div>
 
               <Button
                 type="submit"
-                className="w-full bg-green-600 hover:bg-green-700 text-white"
+                className="w-full bg-[#3ebb3d] hover:bg-[#35a835] text-white font-bold h-12"
                 disabled={loading || !phoneNumber}
               >
                 {loading ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Processing...
+                    Connecting to M-Pesa...
                   </>
                 ) : (
                   <>
-                    <Phone className="mr-2 h-4 w-4" />
                     Pay KES {amount.toLocaleString()}
                   </>
                 )}
               </Button>
-
-              <p className="text-center text-xs text-muted-foreground">
-                You will receive an STK Push on your phone. Enter your M-Pesa PIN to complete the payment.
-              </p>
             </motion.form>
           )}
         </AnimatePresence>
