@@ -1,46 +1,106 @@
+/**
+ * M-Pesa Callback Handler for Vercel
+ * 
+ * This endpoint receives payment confirmations from Safaricom.
+ * You can extend this to:
+ * - Store payment records in a database
+ * - Send email confirmations
+ * - Update user subscription status
+ * - Trigger webhooks to other services
+ */
+
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
-  // 1. Safaricom always sends a POST request
+interface CallbackMetadataItem {
+  Name: string;
+  Value?: string | number;
+}
+
+interface StkCallback {
+  MerchantRequestID: string;
+  CheckoutRequestID: string;
+  ResultCode: number;
+  ResultDesc: string;
+  CallbackMetadata?: {
+    Item: CallbackMetadataItem[];
+  };
+}
+
+interface MpesaCallbackBody {
+  Body: {
+    stkCallback: StkCallback;
+  };
+}
+
+export default async function handler(
+  req: VercelRequest,
+  res: VercelResponse
+) {
+  // Only allow POST requests
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
   try {
-    // 2. Safety Check: Ensure body exists
-    if (!req.body || !req.body.Body) {
-      console.error("Empty callback body received");
-      return res.status(200).json({ ResultCode: 0, ResultDesc: "Accepted" }); 
-    }
+    const callbackData: MpesaCallbackBody = req.body;
+    const { stkCallback } = callbackData.Body;
 
-    const { stkCallback } = req.body.Body;
-    console.log(`Callback for ${stkCallback.CheckoutRequestID}: ${stkCallback.ResultDesc}`);
+    console.log("M-Pesa Callback Received:", JSON.stringify(stkCallback, null, 2));
 
-    // 3. Handle Successful Payment (ResultCode 0 is success)
+    // Check if payment was successful
     if (stkCallback.ResultCode === 0) {
-      const items = stkCallback.CallbackMetadata.Item;
+      // Payment successful - extract details
+      const metadata = stkCallback.CallbackMetadata?.Item || [];
       
-      // Extract values safely
-      const amount = items.find((i: any) => i.Name === "Amount")?.Value;
-      const receipt = items.find((i: any) => i.Name === "MpesaReceiptNumber")?.Value;
-      const phone = items.find((i: any) => i.Name === "PhoneNumber")?.Value;
+      const paymentDetails = {
+        merchantRequestId: stkCallback.MerchantRequestID,
+        checkoutRequestId: stkCallback.CheckoutRequestID,
+        amount: metadata.find(item => item.Name === "Amount")?.Value,
+        mpesaReceiptNumber: metadata.find(item => item.Name === "MpesaReceiptNumber")?.Value,
+        transactionDate: metadata.find(item => item.Name === "TransactionDate")?.Value,
+        phoneNumber: metadata.find(item => item.Name === "PhoneNumber")?.Value,
+      };
 
-      console.log(`SUCCESS: Received KES ${amount} from ${phone}. Receipt: ${receipt}`);
+      console.log("Payment Successful:", paymentDetails);
 
-      // TODO: Save to your database here!
+      // TODO: Add your business logic here
+      // Examples:
+      // 1. Store payment in database
+      // await db.payments.create({ data: paymentDetails });
+      
+      // 2. Send confirmation email
+      // await sendEmail(paymentDetails.phoneNumber, paymentDetails);
+      
+      // 3. Update user subscription
+      // await updateSubscription(paymentDetails.phoneNumber);
+
+      // Respond to Safaricom
+      return res.status(200).json({
+        ResultCode: 0,
+        ResultDesc: "Success",
+      });
     } else {
-      console.warn(`CANCELLED/FAILED: ${stkCallback.ResultDesc}`);
-    }
+      // Payment failed
+      console.log("Payment Failed:", {
+        code: stkCallback.ResultCode,
+        description: stkCallback.ResultDesc,
+      });
 
-    // 4. ALWAYS respond with 200/Success to Safaricom
-    // Even if the payment failed, you must acknowledge receipt or Safaricom will keep retrying for 24 hours.
+      // Log failed payment for analysis
+      // await logFailedPayment(stkCallback);
+
+      return res.status(200).json({
+        ResultCode: 0,
+        ResultDesc: "Received",
+      });
+    }
+  } catch (error) {
+    console.error("Callback Processing Error:", error);
+    
+    // Always return 200 to Safaricom to prevent retries
     return res.status(200).json({
       ResultCode: 0,
-      ResultDesc: "Success"
+      ResultDesc: "Received",
     });
-
-  } catch (error: any) {
-    console.error("Callback Error:", error.message);
-    return res.status(200).json({ ResultCode: 0, ResultDesc: "Accepted with error" });
   }
 }

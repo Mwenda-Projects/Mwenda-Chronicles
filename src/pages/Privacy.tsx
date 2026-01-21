@@ -17,7 +17,7 @@ const Privacy = () => {
           </h1>
           
           <div className="prose prose-lg max-w-none font-body text-muted-foreground">
-            <p className="text-lg">Last updated: January 2026</p>
+            <p className="text-lg">Last updated: December 2024</p>
             
             <h2 className="mt-8 font-heading text-2xl font-semibold text-foreground">
               Information We Collect

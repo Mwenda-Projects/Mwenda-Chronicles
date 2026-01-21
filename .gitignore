@@ -8,13 +8,11 @@ pnpm-debug.log*
 lerna-debug.log*
 
 # Dependency directories
-node_modules/
-
-# Build output
+node_modules
 dist
 dist-ssr
 
-# Environment variables (CRITICAL SECURITY)
+# Environment variables (CRITICAL)
 .env
 .env.local
 .env.development.local

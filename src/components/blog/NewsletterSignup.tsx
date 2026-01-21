@@ -4,6 +4,7 @@ import { Mail, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 export function NewsletterSignup() {
   const [email, setEmail] = useState("");
@@ -16,33 +17,22 @@ export function NewsletterSignup() {
     setIsLoading(true);
     
     try {
-      const formData = new FormData();
-      formData.append("access_key", "cfff598f-cd08-4387-a5d0-ed421cf6f74e");
-      formData.append("email", email);
-      formData.append("subject", "New Newsletter Subscriber");
-      formData.append("from_name", "Mwenda Brown Website");
-
-      const response = await fetch("https://api.web3forms.com/submit", {
-        method: "POST",
-        body: formData,
+      const { data, error } = await supabase.functions.invoke("subscribe-newsletter", {
+        body: { email },
       });
 
-      const data = await response.json();
+      if (error) throw error;
 
-      if (data.success) {
-        setEmail("");
-        toast({
-          title: "Welcome aboard! 🎉",
-          description: "You've successfully subscribed to our newsletter.",
-        });
-      } else {
-        throw new Error("Submission failed");
-      }
+      setEmail("");
+      toast({
+        title: "Welcome aboard! 🎉",
+        description: data.message || "You've successfully subscribed to our newsletter.",
+      });
     } catch (error: any) {
       console.error("Newsletter subscription error:", error);
       toast({
         title: "Subscription failed",
-        description: "Please try again later.",
+        description: error.message || "Please try again later.",
         variant: "destructive",
       });
     } finally {
@@ -71,7 +61,6 @@ export function NewsletterSignup() {
       <form onSubmit={handleSubmit} className="space-y-3">
         <Input
           type="email"
-          name="email"
           placeholder="Enter your email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
@@ -83,7 +72,7 @@ export function NewsletterSignup() {
           ) : (
             <>
               Subscribe
-              <Send className="ml-2 h-4 w-4" />
+              <Send className="h-4 w-4" />
             </>
           )}
         </Button>

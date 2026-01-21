@@ -43,7 +43,7 @@ In your Vercel project dashboard, go to Settings → Environment Variables and a
 MPESA_CONSUMER_KEY=your_consumer_key
 MPESA_CONSUMER_SECRET=your_consumer_secret
 MPESA_SHORTCODE=174379
-MPESA_PASSKEY=bfb279f9aa9b07dbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919
+MPESA_PASSKEY=bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919
 MPESA_CALLBACK_URL=https://your-domain.vercel.app/api/mpesa/callback
 MPESA_ENVIRONMENT=sandbox
 ```

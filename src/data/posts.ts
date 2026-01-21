@@ -1,4 +1,9 @@
-// src/data/posts.ts
+import heroBlog from "@/assets/hero-blog.jpg";
+import post1 from "@/assets/post-1.jpg";
+import post2 from "@/assets/post-2.jpg";
+import post3 from "@/assets/post-3.jpg";
+import post4 from "@/assets/post-4.jpg";
+import post5 from "@/assets/post-5.jpg";
 
 export interface Post {
   id: number;
@@ -59,13 +64,16 @@ Finding peace isn't a destination; it's a practice. Some days will be easier tha
 Start small. Choose one practice from this article and commit to it for a week. Notice how these small changes ripple outward, transforming not just moments, but your entire approach to life.
 
 Peace is not the absence of chaos—it's the ability to find calm within it.
-`,
+    `,
     category: "Lifestyle",
     date: "Dec 10, 2024",
     readTime: "5 min read",
-    image: "../assets/hero-blog.jpg",
+    image: heroBlog,
     slug: "finding-peace",
-    author: { name: "Antony Mwenda", avatar: "../assets/post-1.jpg" }
+    author: {
+      name: "Sarah Mitchell",
+      avatar: post1
+    }
   },
   {
     id: 2,
@@ -121,13 +129,16 @@ Experiment with different combinations until you find what works. And remember�
 When you invest in your mornings, you're investing in your entire life. The calm and clarity you cultivate in those early hours doesn't disappear when you step out the door—it becomes the lens through which you experience everything.
 
 Start tomorrow. Wake up fifteen minutes earlier. Use that time for something that matters to you. That's it. That's the beginning of transformation.
-`,
+    `,
     category: "Productivity",
     date: "Dec 8, 2024",
     readTime: "7 min read",
-    image: "../assets/post-1.jpg",
+    image: post1,
     slug: "productive-mornings",
-    author: { name: "Antony Mwenda", avatar: "../assets/post-1.jpg" }
+    author: {
+      name: "Sarah Mitchell",
+      avatar: post1
+    }
   },
   {
     id: 3,
@@ -176,14 +187,18 @@ You don't need to live by the sea to carry its lessons with you:
 - Trust in the larger cycles, even when you can't see where they're going
 - Make time for wandering without purpose
 - Seek out the edges—the liminal spaces where growth happens
+
 The coast will always be there, waiting. But its wisdom is portable—carried in the sound of waves, the smell of salt air, and the memory of standing at the edge of the world, fully alive.
-`,
+    `,
     category: "Travel",
     date: "Dec 5, 2024",
     readTime: "4 min read",
-    image: "../assets/post-2.jpg",
+    image: post2,
     slug: "coastal-wanderings",
-    author: { name: "Antony Mwenda", avatar: "../assets/post-1.jpg" }
+    author: {
+      name: "Sarah Mitchell",
+      avatar: post1
+    }
   },
   {
     id: 4,
@@ -254,13 +269,16 @@ Here's the beautiful paradox: when you slow down, you often accomplish more of w
 Slow living isn't a destination—it's a continuous practice of choosing intention over autopilot, presence over distraction, meaning over busyness.
 
 Start today. Pick one area of your life and slow it down. Notice what opens up when you stop rushing through.
-`,
+    `,
     category: "Lifestyle",
     date: "Dec 10, 2024",
     readTime: "6 min read",
-    image: "../assets/post-1.jpg",
+    image: post1,
     slug: "slow-living",
-    author: { name: "Antony Mwenda", avatar: "../assets/post-1.jpg" }
+    author: {
+      name: "Sarah Mitchell",
+      avatar: post1
+    }
   },
   {
     id: 5,
@@ -319,13 +337,16 @@ I'm not suggesting everyone needs to wake at 5 AM or walk on beaches. But I am s
 Start with once a week. Go outside before sunrise, wherever you are. Watch the world wake up. See what you notice. See how it changes you.
 
 The dawn has been waiting for you.
-`,
+    `,
     category: "Travel",
     date: "Dec 8, 2024",
     readTime: "4 min read",
-    image: "../assets/post-2.jpg",
+    image: post2,
     slug: "sunrise-walks",
-    author: { name: "Antony Mwenda", avatar: "../assets/post-1.jpg" }
+    author: {
+      name: "Sarah Mitchell",
+      avatar: post1
+    }
   },
   {
     id: 6,
@@ -397,13 +418,16 @@ The perfect brunch is whatever nourishes you. Maybe it's elaborate cooking. Mayb
 What matters is the intention: to slow down, to nourish yourself, to treat ordinary life as worthy of ceremony.
 
 This Sunday, try it. Linger a little longer. Savor a little more. See what opens up when you give yourself permission to simply enjoy.
-`,
+    `,
     category: "Food & Lifestyle",
     date: "Dec 6, 2024",
     readTime: "5 min read",
-    image: "../assets/post-3.jpg",
+    image: post3,
     slug: "sunday-brunch",
-    author: { name: "Antony Mwenda", avatar: "../assets/post-1.jpg" }
+    author: {
+      name: "Sarah Mitchell",
+      avatar: post1
+    }
   },
   {
     id: 7,
@@ -479,13 +503,16 @@ A calm home requires ongoing care:
 You don't need to transform your entire home at once. Start with one surface—a nightstand, a countertop, a desk. Experience the peace that clear space creates. Let that motivate you to continue.
 
 Your home can be a sanctuary. Not through perfection, but through intention. Start today, with whatever you have, wherever you are.
-`,
+    `,
     category: "Home & Decor",
     date: "Dec 4, 2024",
     readTime: "7 min read",
-    image: "../assets/post-4.jpg",
+    image: post4,
     slug: "calm-home",
-    author: { name: "Antony Mwenda", avatar: "../assets/post-1.jpg" }
+    author: {
+      name: "Sarah Mitchell",
+      avatar: post1
+    }
   },
   {
     id: 8,
@@ -573,13 +600,16 @@ If self-care feels indulgent or impossible, that's a sign you need it most. Star
 Remember: taking care of yourself isn't a luxury. It's the foundation for everything else you want to do and be.
 
 This Sunday, try something from this list. Notice how it feels to prioritize yourself. Let that feeling guide you forward.
-`,
+    `,
     category: "Wellness",
     date: "Dec 2, 2024",
     readTime: "5 min read",
-    image: "../assets/post-5.jpg",
+    image: post5,
     slug: "self-care-sunday",
-    author: { name: "Antony Mwenda", avatar: "../assets/post-1.jpg" }
+    author: {
+      name: "Sarah Mitchell",
+      avatar: post1
+    }
   }
 ];
 
@@ -593,7 +623,7 @@ export function getPostBySlug(slug: string): Post | undefined {
 export function getRelatedPosts(currentSlug: string, limit = 3): Post[] {
   const currentPost = getPostBySlug(currentSlug);
   if (!currentPost) return posts.slice(0, limit);
-
+  
   return posts
     .filter(post => post.slug !== currentSlug && post.category === currentPost.category)
     .slice(0, limit);

@@ -5,7 +5,7 @@ import { Footer } from "@/components/blog/Footer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Mail, MapPin, Send, Instagram, Twitter, TicketCheckIcon } from "lucide-react";
+import { Mail, MapPin, Send, Instagram, Twitter } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -207,7 +207,7 @@ const Contact = () => {
                   Based In
                 </h3>
                 <p className="font-body text-muted-foreground">
-                  Currently writing from Nairobi, Kenya
+                  Currently writing from Portland, Oregon
                 </p>
               </div>
 
